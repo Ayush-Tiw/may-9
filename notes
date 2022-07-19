@@ -1,0 +1,136 @@
+Primary key
+
+1.index is something your topic and page number,and its purpose is to identify particular topic immediately (for fast acces)
+index in table increases performance
+index is mandatory in mySql table 
+Any unique value can act as index in Mysql
+If any column has primary key constraint then that column will act as index by default(we dont need not to add index manually)
+Id column can act as a primary key.
+
+
+Foreign key -->it will relate the mark table studentId to student table studentId
+so if we try to add data in mark table with Id not in student table then it will throw error
+here student is parent table and mark is child table
+
+student
+Id      name        email        phone_number      address        department     hod
+1        xxx        xx@gmail.com    233                chennai    cse           mr.g
+2        yyy        yy@gmail.com    4568               dubai      ece           mr.h
+3        zzz        zz@gmail.com    233               chennai     cse           mr.g
+
+subject
+subjectId          subjectNane           duration               teacher
+1                   chemistry             2months                mr. c
+2                   maths                 3months                mr.b
+3                   physics               4months                mr.d
+
+
+Mark
+markId     totalMark    subjectId     studentId
+1           80            2                1 
+2           90            3                2
+3           100           1                1
+mysql is relational database so here we have relation between student table and mark table through studentId
+
+foreign key can be repeated but primary key should not be repeated 
+
+
+
+Joins(left,right ,inner)=>just joining the table 
+
+
+Normalisation=>design database to reduces data redundancy,its a rule  to efficiently design your database
+redundancy means duplicates or not of use
+
+Data Redundancy: Reducing Duplicates in a table
+Data Redundancy leads to certain problem
+
+1.Insertion Anamoly:If new student with the same department then we have to repeat the department data again
+2.Updation Anamoly: if HOD changes then all data has to be updated and if any data is missed it will lead to false data
+3.Deletion data:If we delete student data then department data also been deleted along with it.
+
+
+to design database we efficiently we have some Normalisation Normal forms:
+1. 1NF
+2. 2NF
+3. 3NF
+4. BCNF
+5. 4NF
+6. 5NF
+
+1st Normal form:
+Rules:
+1. Atomic value:Each column must have only one value. It should not contain multiple values  by adding comas like AAA,BBB.
+2. The data stored in a column must be in a same kind(integer with integer,string with string).
+3. Each column should have a unique column name.
+4. Order in which data saves doesn't matter.
+
+
+ 2nd Normal form:
+Rules:
+1. It sholud be in 1NF.
+2.It should remove the partial dependencies.
+
+               Student Table
+StudentId      Name       Ph.no     Email
+1              xxx        44785     xx@gmail.com
+2              yyy         25689    yy@gmail.com
+
+            Subjet Table
+SubjectID      Name        Duration    TeacherName
+1              maths       2months     mr.m
+2              physics     3months     mr.p
+
+
+              MarksTable
+StudentID       SubjectId         MArks     x TeacherNAme(x means it will be removed from mark?Table)
+1               1                  94          mr.m
+2               1                 93           mr.m
+1               2                 95           mr.p
+2               2                 98           mr.p
+here comination of StudentID and subjectId is unique we cannot repeat there combination
+here both StudentID and subjectId are prime  attribute in case of marksTable
+
+Description:
+From the markTable StudentId and SubjectId goes together as a primary key columns(prime Attribution).
+If we want to retrieve mark then we need two attribute StudentID and subjectId.
+but if want to retrieve teacherName only SubjetId is necessary but markTable have two prime attribute.
+This is called partial Dependencies and it has to be removed.
+Partial Dependencies:
+whether a non-prime attribute  depends on only one prime-attribute it is said to be partial Dependency.
+
+solution:
+teacherName can be replaced in subjectTable and it should be removed from markTable.
+
+
+
+3rd NormalForm: ReducingRules:
+1. It should be in 2NF.
+2. It should remove Transition Dependency.
+
+
+                MarkTabe
+StudentId        SujectId      Marks        ExamId        x ExamName      x TotalMarks 
+1                  1            100           1              Mathpaper1       100
+2                  1            80            2              MathsPaper1      100
+1                  2            50            3              practical         50
+2                  2            48            4              theory            80
+ExamId(non-prime attribute) depend on SubjectId
+
+                 ExamTable
+ExamId           ExamName               TotalMarks 
+1                  Mathpaper1            100
+2                   MathsPaper1          100
+3                practical                50
+4                theory                   80
+
+for ExamTable ExamId is prime attribute
+Transitive dependencies: 
+If a non-prime attribute(examName) depends on another non-prime attribute it is said to be transitive dependency.
+
+Description:
+From the above table exam_name depends on student and subject such as each dept student will have different exams based on subjectName 
+For each exam there is different total_marks changes based on exam.Therefore Total/marks depends on exam_name.
+
+TotalMarks dependes on exam name but exam name is not a part of primary keys.This is said to be transitive dependencies and we can remove it by creating the new table for ExamName and TotalMarks
+
